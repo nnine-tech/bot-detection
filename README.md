@@ -123,32 +123,19 @@ Results saved as CSV in `output/` folder:
 **Import Errors:**
 - Run: `pip install -r requirements.txt`
 - Check virtual environment
-
+- 
 ## 🎯 Detection Features
+The bot detection model uses the following features:
 
-- Request frequency
-- User agent patterns
-- URL patterns
-- Error rates
-- Time patterns
-- Request types
+- **Status codes (`status`)** → High error responses (4xx/5xx).
+- **User agent patterns (`ua_has_bot_like_keyword`)** → Detect bot-like UA strings.
+- **Referrer check (`referrer_is_missing`)** → Missing referrer indicates non-human traffic.
+- **HTTP method (`method`)** → Identifies abnormal request types.
+- **Endpoint accessed (`endpoint`)** → Bots often target repetitive/suspicious URLs.
+- **Request timing & frequency (`timestamp`)** → Detects unnatural request intervals.
+- **Aggregated behavior metrics** → e.g., request volume per IP, error ratios.
 
-## ⚙️ Settings
 
-Edit `src/main.py` for customization:
-```python
-RANDOM_FOREST_PARAMS = {
-    'n_estimators': 100,
-    'max_depth': 10
-}
-```
-
-## 📈 Performance Tips
-
-- Start with small log files
-- Monitor memory usage
-- Use MongoDB indexes
-- Clean old data regularly
 
 ---
 
