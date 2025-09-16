@@ -1,0 +1,29 @@
+version: "3.8"
+
+services:
+  # MongoDB Database Service
+  mongo:
+    image: mongo:6
+    container_name: botdetection-mongo
+    volumes:
+      - mongo_data:/data/db
+    ports:
+      - "27017:27017"
+  
+  # Bot Detection Backend Service
+  botdetection-backend:
+    image: sxnmgxr/botdetection-backend:latest
+    build: .
+    container_name: botdetection-backend
+    env_file:
+      - ./.env
+    depends_on:
+      - mongo
+    volumes:
+      - ./data:/app/data
+      - ./output:/app/output
+    ports:
+      - "8000:8000"
+
+volumes:
+  mongo_data:
