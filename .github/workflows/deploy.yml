@@ -33,11 +33,27 @@ jobs:
         with:
           host: ${{ secrets.AZURE_VM_IP_DEV }}
           username: ${{ secrets.AZURE_VM_USER_DEV }}
-          key: ${{ secrets.AZURE__SSH_KEY_DEV }}
+          key: ${{ secrets.AZURE_SSH_KEY_DEV }}   # fixed typo: single underscore
           script: |
             cd ~/bot-detection-system || git clone https://github.com/<your-username>/bot-detection-system.git ~/bot-detection-system && cd ~/bot-detection-system
             git fetch origin develop
             git reset --hard origin/develop
+
+            # ✅ Create or update .env file for backend
+            cat > .env <<EOL
+            MONGO_URL=${{ secrets.MONGO_URL }}
+            DB_NAME=${{ secrets.DB_NAME }}
+            DB_USER=${{ secrets.DB_USER }}
+            DB_PASSWORD=${{ secrets.DB_PASSWORD }}
+            DB_HOST=${{ secrets.DB_HOST }}
+            DB_PORT=${{ secrets.DB_PORT }}
+            SECRET_KEY=${{ secrets.SECRET_KEY }}
+            JWT_SECRET=${{ secrets.JWT_SECRET }}
+            EOL
+
+            echo ".env file created/updated:"
+            cat .env   # ✅ show the env contents for debugging (remove later for security)
+
             docker compose pull
             docker compose up -d
             docker system prune -af --volumes
